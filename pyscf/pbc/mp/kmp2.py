@@ -485,11 +485,11 @@ def get_nmo(mp, per_kpoint=False):
 
     #Fix for issue #3486
     # if hasattr(mp, 'mo_energy') and mp.mo_energy is not None:
-        # from pyscf.pbc.scf.hf import INVALID_ORBITAL_ENERGY
-        # if isinstance(mp.mo_energy, np.ndarray):
-            # nmo = np.count_nonzero(mp.mo_energy != INVALID_ORBITAL_ENERGY, axis=1)
-        # else:
-            # nmo = np.array([len(x) for x in mp.mo_energy])
+    #     from pyscf.pbc.scf.hf import INVALID_ORBITAL_ENERGY
+    #     if isinstance(mp.mo_energy, np.ndarray):
+    #         nmo = np.count_nonzero(mp.mo_energy != INVALID_ORBITAL_ENERGY, axis=1)
+    #     else:
+    #         nmo = np.array([len(x) for x in mp.mo_energy])
     # else:
     nmo = np.full(mp.nkpts, len(mp.mo_occ[0]), dtype=int)
 
