@@ -483,14 +483,15 @@ def get_nmo(mp, per_kpoint=False):
     if mp._nmo is not None:
         return mp._nmo
 
-    if hasattr(mp, 'mo_energy') and mp.mo_energy is not None:
-        from pyscf.pbc.scf.hf import INVALID_ORBITAL_ENERGY
-        if isinstance(mp.mo_energy, np.ndarray):
-            nmo = np.count_nonzero(mp.mo_energy != INVALID_ORBITAL_ENERGY, axis=1)
-        else:
-            nmo = np.array([len(x) for x in mp.mo_energy])
-    else:
-        nmo = np.full(mp.nkpts, len(mp.mo_occ[0]), dtype=int)
+    #Fix for issue #3486
+    # if hasattr(mp, 'mo_energy') and mp.mo_energy is not None:
+        # from pyscf.pbc.scf.hf import INVALID_ORBITAL_ENERGY
+        # if isinstance(mp.mo_energy, np.ndarray):
+            # nmo = np.count_nonzero(mp.mo_energy != INVALID_ORBITAL_ENERGY, axis=1)
+        # else:
+            # nmo = np.array([len(x) for x in mp.mo_energy])
+    # else:
+    nmo = np.full(mp.nkpts, len(mp.mo_occ[0]), dtype=int)
 
     if mp.frozen is None:
         pass
@@ -539,10 +540,11 @@ def get_frozen_mask(mp):
 
     '''
     moidx = [np.ones(x.size, dtype=bool) for x in mp.mo_occ]
-    if getattr(mp, 'mo_energy', None) is not None:
-        from pyscf.pbc.scf.hf import INVALID_ORBITAL_ENERGY
-        for k, idx in enumerate(moidx):
-            idx[np.asarray(mp.mo_energy[k]) == INVALID_ORBITAL_ENERGY] = False
+    #Issue #3486, revert commit #3451
+    # if getattr(mp, 'mo_energy', None) is not None:
+        # from pyscf.pbc.scf.hf import INVALID_ORBITAL_ENERGY
+        # for k, idx in enumerate(moidx):
+            # idx[np.asarray(mp.mo_energy[k]) == INVALID_ORBITAL_ENERGY] = False
     if mp.frozen is None:
         pass
     elif isinstance(mp.frozen, (int, np.integer)):
